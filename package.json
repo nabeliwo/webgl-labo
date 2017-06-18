@@ -1,0 +1,21 @@
+{
+  "name": "webgl-labo",
+  "version": "1.0.0",
+  "description": "It is WebGL's experiment site",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nabeliwo/webgl-labo.git"
+  },
+  "author": "nabeliwo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nabeliwo/webgl-labo/issues"
+  },
+  "homepage": "https://github.com/nabeliwo/webgl-labo#readme",
+  "dependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-helmet": "^5.1.3"
+  }
+}
