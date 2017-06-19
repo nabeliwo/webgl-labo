@@ -35,10 +35,10 @@ module.exports = {
     contentBase: path.join(__dirname, './docs'),
   },
   plugins: [
-    // new webpack.DefinePlugin({
-    //   'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-    // }),
-    // new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    }),
+    new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
     new ExtractTextPlugin('[name].css'),
   ],
 };
