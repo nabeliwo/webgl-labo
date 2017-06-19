@@ -1,0 +1,35 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 150px;
+}
+.title { display: none; }
+.logo {
+  display: inline-block;
+  font-size: 0;
+}
+.logo svg { transition: all .3s; }
+.logo:hover { opacity: .7; }
+.logo:hover svg { fill: #68cccd; }
+.icon {
+  display: inline-block;
+  width: 30px;
+  height: auto;
+  margin: 0 2px;
+}
+.icon__space { width: 15px; }
+
+
+@media (max-width: 768px) {
+  .wrapper {
+    height: 130px;
+    padding: 20px;
+  }
+  .icon { margin: 4px 2px; }
+  .icon__space {
+    display: block;
+    margin: 0;
+  }
+}

@@ -1,0 +1,9 @@
+.wrapper {
+  display: inline-block;
+  margin: 0 10px 20px;
+  width: 250px;
+  height: 250px;
+  background-color: red;
+  transition: all .3s;
+}
+.wrapper:hover { opacity: .7; }

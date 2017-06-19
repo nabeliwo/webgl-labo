@@ -1,0 +1,7 @@
+.wrapper {
+  background-color: #fff;
+  background-repeat: repeat;
+  background-image: -webkit-linear-gradient(transparent 94%, #ccc 50%,  #ccc),
+                    -webkit-linear-gradient(0deg, transparent 94%, #ccc 50%, #ccc);
+  background-size: 10px 10px;
+}
