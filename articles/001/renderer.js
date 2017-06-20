@@ -52,28 +52,32 @@ export default class Renderer {
     attStride[1] = 4;
 
     // 頂点の位置情報を格納する配列
-    const vertex_position = [
-      0.0, 1.0, 0.0,
-      1.0, 0.0, 0.0,
-      -1.0, 0.0, 0.0
+    const vertexPosition = [
+      [
+        0.0, 3.4, 0.0,
+        4.0, -3.4, 0.0,
+        -4.0, -3.4, 0.0
+      ],
+      [
+        2.4, 0.2, 0.2,
+        0.0, -3.8, 0.2,
+        -2.4, 0.2, 0.2
+      ]
     ];
 
     // 頂点の色情報を格納する配列
-    const vertex_color = [
-      1.0, 0.0, 0.0, 1.0,
-      0.0, 1.0, 0.0, 1.0,
-      0.0, 0.0, 1.0, 1.0
+    const vertexColor = [
+      [
+        0.25, 0.56, 0.75, 1.0,
+        0.25, 0.56, 0.75, 1.0,
+        0.25, 0.56, 0.75, 1.0
+      ],
+      [
+        0.41, 0.8, 0.8, 1.0,
+        0.41, 0.8, 0.8, 1.0,
+        0.41, 0.8, 0.8, 1.0
+      ]
     ];
-
-    // VBOの生成
-    const position_vbo = createVbo(gl, vertex_position);
-    const color_vbo = createVbo(gl, vertex_color);
-
-    // VBO を登録する
-    setAttribute(gl, [position_vbo, color_vbo], attLocation, attStride);
-
-    // uniformLocationの取得
-    const uniLocation = gl.getUniformLocation(prg, 'mvpMatrix');
 
     // minMatrix.js を用いた行列関連処理
     // matIVオブジェクトを生成
@@ -87,24 +91,22 @@ export default class Renderer {
     const mvpMatrix = m.identity(m.create());
 
     // ビュー×プロジェクション座標変換行列
-    m.lookAt([0.0, 0.0, 3.0], [0, 0, 0], [0, 1, 0], vMatrix);
+    m.lookAt([0.0, 0.0, 10.0], [0, 0, 0], [0, 1, 0], vMatrix);
     m.perspective(90, c.width / c.height, 0.1, 100, pMatrix);
     m.multiply(pMatrix, vMatrix, tmpMatrix);
-
-    // 一つ目のモデルを移動するためのモデル座標変換行列
-    m.translate(mMatrix, [1.5, 0.0, 0.0], mMatrix);
-
-    // モデル×ビュー×プロジェクション(一つ目のモデル)
-    m.multiply(tmpMatrix, mMatrix, mvpMatrix);
 
     // インスタンス変数の宣言
     this.gl = gl;
     this.count = 0;
     this.m = m;
+    this.prg = prg;
+    this.attLocation = attLocation;
+    this.attStride = attStride;
+    this.vertexPosition = vertexPosition;
+    this.vertexColor = vertexColor;
     this.mMatrix = mMatrix;
     this.tmpMatrix = tmpMatrix;
     this.mvpMatrix = mvpMatrix;
-    this.uniLocation = uniLocation;
     this.render = this.render.bind(this);
     this.loop = null;
   }
@@ -113,35 +115,29 @@ export default class Renderer {
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
     this.gl.clearDepth(1.0);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+    this.gl.enable(this.gl.DEPTH_TEST);
 
     this.count++;
-
     const rad = (this.count % 360) * Math.PI / 180;
-    const x = Math.cos(rad);
-    const y = Math.sin(rad);
-    this.m.identity(this.mMatrix);
-    this.m.translate(this.mMatrix, [x, y + 1.0, 0.0], this.mMatrix);
 
-    this.m.multiply(this.tmpMatrix, this.mMatrix, this.mvpMatrix);
-    this.gl.uniformMatrix4fv(this.uniLocation, false, this.mvpMatrix);
-    this.gl.drawArrays(this.gl.TRIANGLES, 0, 3);
-    
-    this.m.identity(this.mMatrix);
-    this.m.translate(this.mMatrix, [1.0, -1.0, 0.0], this.mMatrix);
-    this.m.rotate(this.mMatrix, rad, [0, 1, 0], this.mMatrix);
+    for (let i = 0, l = this.vertexPosition.length; i < l; i++) {
+      // VBOの生成
+      const positionVbo = createVbo(this.gl, this.vertexPosition[i]);
+      const colorVbo = createVbo(this.gl, this.vertexColor[i]);
 
-    this.m.multiply(this.tmpMatrix, this.mMatrix, this.mvpMatrix);
-    this.gl.uniformMatrix4fv(this.uniLocation, false, this.mvpMatrix);
-    this.gl.drawArrays(this.gl.TRIANGLES, 0, 3);
-    
-    const s = Math.sin(rad) + 1.0;
-    this.m.identity(this.mMatrix);
-    this.m.translate(this.mMatrix, [-1.0, -1.0, 0], this.mMatrix);
-    this.m.scale(this.mMatrix, [s, s, 0.0], this.mMatrix);
+      // VBO を登録する
+      setAttribute(this.gl, [positionVbo, colorVbo], this.attLocation, this.attStride);
 
-    this.m.multiply(this.tmpMatrix, this.mMatrix, this.mvpMatrix);
-    this.gl.uniformMatrix4fv(this.uniLocation, false, this.mvpMatrix);
-    this.gl.drawArrays(this.gl.TRIANGLES, 0, 3);
+      // uniformLocationの取得
+      const uniLocation = this.gl.getUniformLocation(this.prg, 'mvpMatrix');
+
+      this.m.identity(this.mMatrix);
+      this.m.rotate(this.mMatrix, rad, [0, 1, 0], this.mMatrix);
+
+      this.m.multiply(this.tmpMatrix, this.mMatrix, this.mvpMatrix);
+      this.gl.uniformMatrix4fv(uniLocation, false, this.mvpMatrix);
+      this.gl.drawArrays(this.gl.TRIANGLES, 0, 3);
+    }
 
     this.gl.flush();
 

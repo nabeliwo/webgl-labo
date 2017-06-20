@@ -190,10 +190,13 @@ input:-webkit-autofill {
   margin: 0 10px 20px;
   width: 250px;
   height: 250px;
-  background-color: red;
   transition: all .3s;
 }
 ._1HnTvmda5jrmjaohXBmiAH:hover { opacity: .7; }
+._11I003IlcX3CipyEVlc3hf {
+  width: 100%;
+  height: auto;
+}
 ._3Yho3Kj7CdIlJd7B6AArv1 {
   padding: 20px 10px;
   text-align: center;

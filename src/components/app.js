@@ -31,7 +31,7 @@ export default class App extends React.Component {
 
     return (
       <div className={styles.articles}>
-        {Object.keys(articles).map(key => <Item key={key} href={`#/${key}`} />)}
+        {Object.keys(articles).map(key => <Item key={key} href={`#/${key}`} img={`/thumbnail/${key}.png`} />)}
       </div>
     );
   }
